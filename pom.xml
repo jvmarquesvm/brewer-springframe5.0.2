@@ -26,7 +26,7 @@
 		<flyway-maven-plugin.version>4.0.2</flyway-maven-plugin.version>
 		
 		<!-- <mysql-connector-java.version>5.1.31</mysql-connector-java.version> -->
-		<mysql-connector-java.version>8.0.30</mysql-connector-java.version>
+		<mysql-connector-java.version>8.0.30</mysql-connector-java.version> 
 		<!-- Spring Data JPA -->
 		<spring-data-jpa.version>1.10.2.RELEASE</spring-data-jpa.version>
 		<!-- Jackson - JSON -->
@@ -94,11 +94,6 @@
 		  <version>${thymeleaf.version}</version>
 		  <scope>compile</scope>
 		</dependency>
-		
-        <!-- <dependency>
-            <groupId>nz.net.ultraq.thymeleaf</groupId>
-            <artifactId>thymeleaf-layout-dialect</artifactId>
-        </dependency> -->
         
         <dependency>
 		  <groupId>nz.net.ultraq.thymeleaf</groupId>
@@ -329,14 +324,14 @@
 		</profile>
 		<profile>
 			<id>prod</id>
-			<!-- prod é o profile ativo por default
-			quando não passar nada, o profile ativo é o prod -->
+			 <!-- prod é o profile ativo por default
+			quando não passar nada, o profile ativo é o prod  -->
 			<activation>
-				<activeByDefault>true</activeByDefault>
+				<activeByDefault>false</activeByDefault>
 			</activation>
 			<dependencies>
-				<!-- Mysql - colocado aqui devido a execução em produção
-				   scope era provided -->
+				<!--  Mysql - colocado aqui devido a execução em produção
+				   scope era provided  -->
 				<dependency>
 					<groupId>mysql</groupId>
 					<artifactId>mysql-connector-java</artifactId>
@@ -345,6 +340,6 @@
 				</dependency>
 			</dependencies>
 		</profile>
-	</profiles>
+	</profiles> 
 	
 </project>

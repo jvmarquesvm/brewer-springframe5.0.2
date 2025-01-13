@@ -28,7 +28,6 @@ public class AppInitializer extends AbstractAnnotationConfigDispatcherServletIni
 
 	/**
 	 * Configuração para o Spring encontrar os Controllers 
-	 * 
 	 * Inicilizar a configuração de email
 	 */
 	@Override
@@ -40,7 +39,6 @@ public class AppInitializer extends AbstractAnnotationConfigDispatcherServletIni
 	 * Configurando que qualquer url dentro da aplicação será mapeado pelo
 	 * Dispatcher Servlet
 	 * url mappings no xml
-	 * 
 	 */
 	@Override
 	protected String[] getServletMappings() {
@@ -77,7 +75,7 @@ public class AppInitializer extends AbstractAnnotationConfigDispatcherServletIni
 	@Override
 	public void onStartup(ServletContext servletContext) throws ServletException {
 		super.onStartup(servletContext);
-		servletContext.setInitParameter("spring.profiles.default", "prod");
+		servletContext.setInitParameter("spring.profiles.default", "local");
 	}
 
 }
