@@ -327,7 +327,7 @@
 			 <!-- prod é o profile ativo por default
 			quando não passar nada, o profile ativo é o prod  -->
 			<activation>
-				<activeByDefault>false</activeByDefault>
+				<activeByDefault>true</activeByDefault>
 			</activation>
 			<dependencies>
 				<!--  Mysql - colocado aqui devido a execução em produção
