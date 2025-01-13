@@ -53,7 +53,7 @@ public class JPAConfig {
 		dataSource.setUrl(jdbUrl);
 		dataSource.setUsername(username);
 		dataSource.setPassword(password);
-		dataSource.setInitialSize(4);
+		dataSource.setInitialSize(10);
 		
 		return dataSource;
 	}
