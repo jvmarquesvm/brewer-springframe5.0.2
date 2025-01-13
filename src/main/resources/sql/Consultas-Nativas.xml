@@ -6,7 +6,7 @@
 					<orm:named-native-query name="Vendas.totalPorMes" result-set-mapping="totalPorMesMapping">
 						<orm:query>
 									select date_format(data_criacao, '%Y/%m') mes, count(*) total
-						  			 from brewer.venda
+						  			 from venda
 						  		   where data_criacao > DATE_SUB(NOW(), INTERVAL 12 MONTH)
 						  			   and status = 'EMITIDA'
 							  group by date_format(data_criacao, '%Y/%m')   
