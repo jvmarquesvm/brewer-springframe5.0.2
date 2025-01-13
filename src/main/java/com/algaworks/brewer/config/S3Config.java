@@ -19,7 +19,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 //@ComponentScan(basePackageClasses = {FotoStorageRunnable.class, FotoStorage.class,  FotoStorageS3.class})
 @Configuration
-@PropertySource(value={"file:${HOME}/.brewer-s3.properties"}, ignoreResourceNotFound = false)
+@PropertySource(value={"file:${HOME}/.brewer-s3.properties"}, ignoreResourceNotFound = true)
 public class S3Config {
 	
 	@Autowired

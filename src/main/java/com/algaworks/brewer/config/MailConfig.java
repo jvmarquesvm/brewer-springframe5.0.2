@@ -29,7 +29,7 @@ import com.algaworks.brewer.mail.Mailer;
 //para iOS
 //@PropertySource( value={"file://${HOME}/.brewer-mail.properties"}, ignoreResourceNotFound = true)
 //para windowns
-@PropertySource( value={"file:${HOME}/.brewer-mail.properties"}, ignoreResourceNotFound = false) //Sobrescreve a propriedade password
+@PropertySource( value={"file:${HOME}/.brewer-mail.properties"}, ignoreResourceNotFound = true) //Sobrescreve a propriedade password
 public class MailConfig {
 	
 	@Autowired
