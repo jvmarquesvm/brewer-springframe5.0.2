@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<orm:entity-mappings version="2.1" xmlns:orm="http://xmlns.jcp.org/xml/ns/persistence/orm" 
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+                 xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence/orm 
+                                                     http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd ">
+					<orm:named-native-query name="Vendas.totalPorMes" result-set-mapping="totalPorMesMapping">
+						<orm:query>
+									select date_format(data_criacao, '%Y/%m') mes, count(*) total
+						  			 from brewer.venda
+						  		   where data_criacao > DATE_SUB(NOW(), INTERVAL 12 MONTH)
+						  			   and status = 'EMITIDA'
+							  group by date_format(data_criacao, '%Y/%m')   
+							   order by date_format(data_criacao, '%Y/%m') desc
+					    </orm:query>
+					</orm:named-native-query>
+						<orm:named-native-query name="Vendas.porOrigem" result-set-mapping="porOrigemMapping">
+							<orm:query>
+								select date_format(v.data_criacao, '%Y/%m') mes
+								          , group_concat(distinct (select coalesce(sum(i.quantidade), 0) 
+								 from item_venda i
+								        , cerveja c
+								        , venda v1
+							   where i.codigo_venda = v1.codigo 
+								       and i.codigo_cerveja = c.codigo
+								       and c.origem = 'NACIONAL'
+								       and date_format(v1.data_criacao, '%Y/%m') = date_format(v.data_criacao, '%Y/%m')
+								   )) total_nacional
+								 , group_concat(distinct (select coalesce(sum(i.quantidade), 0)
+								     from item_venda i
+								        , cerveja c
+								        , venda v1
+								     where i.codigo_venda = v1.codigo 
+								       and i.codigo_cerveja = c.codigo
+								       and c.origem = 'INTERNACIONAL'
+								       and date_format(v1.data_criacao, '%Y/%m') = date_format(v.data_criacao, '%Y/%m')
+								   )) total_internacional
+							 from venda v
+							 where v.data_criacao > DATE_SUB(NOW(), INTERVAL 12 MONTH)
+							   and status = 'EMITIDA'
+							   group by date_format(v.data_criacao, '%Y/%m')  
+							   order by date_format(v.data_criacao, '%Y/%m') desc
+					    </orm:query>
+					</orm:named-native-query>
+					<orm:sql-result-set-mapping name="totalPorMesMapping">
+						<orm:constructor-result target-class="com.algaworks.brewer.dto.VendaMes">
+							<orm:column name="mes" class="java.lang.String"/>
+							<orm:column name="total" class="java.lang.Integer"/>
+						</orm:constructor-result>
+					</orm:sql-result-set-mapping>    
+					<orm:sql-result-set-mapping name="porOrigemMapping">
+						<orm:constructor-result target-class="com.algaworks.brewer.dto.VendaOrigem">
+							<orm:column name="mes" class="java.lang.String"/>
+							<orm:column name="total_nacional" class="java.lang.Integer"/>
+							<orm:column name="total_internacional" class="java.lang.Integer"/>
+						</orm:constructor-result>
+					</orm:sql-result-set-mapping>        
+</orm:entity-mappings>

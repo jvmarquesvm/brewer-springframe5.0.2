@@ -1,0 +1,1 @@
+update grupo set nome = 'Administrador' where codigo = 1;

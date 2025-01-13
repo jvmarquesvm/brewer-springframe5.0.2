@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="http://www.thymeleaf.org" 
+      lang="pt-BR">
+      
+	<head></head>
+	
+	<body>
+		<th:block th:fragment="paginacao(pagina)">
+			<div class="col-sm-12 text-center" th:if="${not #lists.isEmpty(pagina.conteudo)}">
+			
+				<!-- Estrutura pronta do bootstrap nav -->
+				<nav>
+					<ul class="pagination pagination-sm" >
+						<li th:class="${pagina.primeiro} ? disabled">
+						    <!-- <a href="#" th:remove="${pagina.first} ? tag ou body ou all"> <span> &laquo; </span> </a>  -->
+							<!-- <a th:href="|?page=${pagina.atual - 1}|" th:remove="${pagina.primeiro} ? tag"> <span> &laquo; </span> </a>  -->
+							<a th:href="${pagina.urlParaPagina(pagina.atual - 1)}" th:remove="${pagina.primeiro} ? tag"> 
+							  <span> &laquo; </span> 
+							 </a>
+						</li>
+						
+						<th:block th:each="p : ${ #numbers.sequence(1, pagina.total)}" 
+						                        th:with="numeroPagina=${p - 1}, paginaAtual=${pagina.atual}">
+						                        <!-- Timeleaf criando variável valida dentro de block -->
+						                        
+							<!--<li class="${ paginaAtual == numeroPagina } ? active"> -->
+								<!--  <a th:href="|?page=${p - 1}|"> [[ ${p} ]]</a> -->
+							<li th:class="${ numeroPagina == paginaAtual } ? active">
+								<!-- <a th:href="|&page=${numeroPagina}|"> [[ ${p} ]]</a>  -->
+								<a th:href="${pagina.urlParaPagina(numeroPagina)}"> [[ ${p} ]]</a>
+							</li>
+							
+						</th:block>
+						
+						<li th:class="${pagina.ultimo} ? disabled">
+							<!-- <a th:href="|?page=${pagina.atual + 1}|" th:remove="${pagina.ultimo} ? tag"> <span> &raquo; </span> </a>  -->
+							<a th:href="${pagina.urlParaPagina(pagina.atual + 1)}" th:remove="${pagina.ultimo} ? tag"> 
+							  <span> &raquo; </span> 
+							</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</th:block>
+	</body>
+</html>

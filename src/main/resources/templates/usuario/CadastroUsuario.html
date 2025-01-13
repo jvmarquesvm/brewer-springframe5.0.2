@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="http://www.thymeleaf.org" 
+      lang="pt-BR"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:data="http://www.thymeleaf.org/extras/data"
+      layout:decorate="~{layout/LayoutPadrao}"
+      xmlns:brewer="http://localhost.brewer" >
+
+	<head>
+		<title>Cadastro de usuário</title>
+		<link rel="stylesheet" type="text/css" th:href="@{/layout/stylesheets/bootstrap-switch.min.css}"/>
+		<link rel="stylesheet" type="text/css" th:href="@{/layout/vendors/datepicker/bootstrap-datepicker.standalone.min.css}"/>
+	</head>
+	<body>
+		
+			<section  layout:fragment="cadastroCerveja-conteudo" >
+				<div class="page-header">
+					<div class="container-fluid row">
+						<div class="col-xs-10">
+							<h1>
+								<strong th:if="${usuario.novo}">Cadastro de usuário</strong>
+								<strong th:unless="${usuario.novo}" >Edição de Usuário [[${usuario.nome}]]</strong>
+							</h1>
+						</div>
+						<!-- Se o usuário tiver autorização essa div ira aparecer - config por url -->
+						<div class="col-xs-2">
+							<div class="aw-page-header-controls">
+								<a class="btn btn-default" th:href="@{/usuario}">
+									<i class="glyphicon glyphicon-plus-sign"></i> 
+										<span class="hidden-xs hidden-sm">Pesquisa Usuário</span>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>	
+				
+				<div class="container-fluid">
+				<!-- Th:action permite submeter para uma url diferente da origem -->
+					<form method="post" class="form-vertical  js-form-loading" th:object="${usuario}" 
+					        th:action="${usuario.novo} ?  @{/usuario/novo} :  @{/usuario/{codigo}(codigo=${usuario.codigo})} ">
+						<brewer:message/>
+						
+						<!-- para o hibernate identifcar que é uma edição -->
+						<input type="hidden" th:field="*{codigo}" />
+						
+						<div class="row">
+							<div class="col-sm-12 form-group bw-required" brewer:classforerror="nome">
+								<label for="nome" class="control-label">Nome</label>
+								<input id="nome" type="text" class="form-control" autofocus="autofocus" th:field="*{nome}"/>
+							</div>
+						</div>
+						
+						<div class="row">
+							<div class="col-sm-6 form-group bw-required"  brewer:classforerror="email">
+								<label for="email" class="control-label">Email</label>
+								<input id="email" type="email" class="form-control" th:field="*{email}" />
+							</div>
+							<div class="col-sm-3 form-group"  brewer:classforerror="dataNascimento">
+								<label for="dataNascimento" class="control-label">Data de Nascimento</label>
+								<input id="dataNascimento" type="text" class="form-control  js-date" th:field="*{dataNascimento}" 
+								   data-provide="datepicker" data-date-orientation="bottom" data-date-language="pt-BR"
+								        data-date-today-highlight="true" data-date-autoclose="true"        autocomplete="off"/>
+								         
+							</div>
+						</div>
+						
+						<div class="row">
+							<div class="form-group col-sm-3" brewer:classforerror="senha" th:classappend="${usuario.novo} ? bw-required">
+								<label for="senha" class="control-label">Senha</label>
+								<input id="senha" type="password" class="form-control" th:field="*{senha}"/>
+							</div>
+							
+							<div class="col-sm-3 form-group bw-required" brewer:classforerror="confirmacaoSenha">
+								<label for="confirmacao"  class="control-label">Confirmação de senha</label>
+								<input id="confirmacao" type="text" class="form-control" th:field="*{confirmacaoSenha}"/>
+							</div>
+							
+							<!-- O próprio usuário não pode se desativar 
+							   Obs: verificar pq não está recupeando o valor do DB  th:value=${}-->
+							<div class="form-group  col-sm-3" th:if="${#authentication.principal.usuario.codigo != usuario.codigo}">
+								<label class="control-label">Ativo</label>
+								<div>
+									<input type="checkbox" name="status" class="js-status" data-size="large" data-off-color="danger" 
+										data-on-text="Ativo" data-off-text="Inativo" th:field="*{ativo}"/>
+								</div>
+							</div>
+						</div>
+						
+						<div class="row">
+							<div class="col-lg-3 col-sm-6 form-group bw-required"  brewer:classforerror="grupos" >
+							    <label for="grupo" class="control-label">Grupos</label>
+							    <div>
+								    <!-- 
+					                	<div class="radio radio-inline">
+					                		<input id="adm" type="radio" name="adm"/>
+					                		<label>Administrador</label>
+					                	</div>
+			                         -->
+				                	<th:block th:each="grupo : ${grupos}">
+					                	<div class="checkbox checkbox-inline">
+					                		<input type="checkbox" name="adm" th:value="${grupo.codigo}" th:field="*{grupos}"/>
+					                		<label th:text="${grupo.nome}" th:for="${#ids.prev('grupos')}" >Administrador</label>
+					                	</div>
+				                	</th:block>
+							  	</div>
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<button class="btn  btn-primary" type="submit">Salvar</button>
+						</div>
+					</form>
+				</div>
+				<div th:replace="cerveja/CadastroRapidoEstilo :: modalEstilo"></div>
+		    </section>
+	<!-- $("[name='status']").bootstrapSwitch(); 
+	//evento executado após a pagina ser carregada..
+   $(document).ready(function() {
+    //método para busca do estado
+    var state = $("#seuCheckbox").bootstrapSwitch('state');
+    });
+    https://bttstrp.github.io/bootstrap-switch/options.html
+    -->
+		<th:block layout:fragment="javascript-extra">
+		  <script th:src="@{/layout/vendors/bootstrap-switch/bootstrap-switch.min.js}"></script>
+		  <script>
+		    $(".js-status").bootstrapSwitch('state', false);
+		  </script>
+		  <script th:src="@{/layout/vendors/datepicker/bootstrap-datepicker.min.js}"></script>
+		  <script th:src="@{/layout/vendors/datepicker/bootstrap-datepicker.pt-BR.min.js}"></script>		  
+		  <script th:src="@{/layout/javascripts/brewer.js}"></script>		  
+		</th:block>
+	</body>
+</html>

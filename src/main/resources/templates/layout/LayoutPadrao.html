@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="http://www.thymeleaf.org" 
+      lang="pt-BR"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+      
+	<head>
+		<meta charset="UTF-8"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1"/>
+	
+		<title>AlgaWorks</title>
+	
+		<link rel="stylesheet" type="text/css" th:href="@{/layout/stylesheets/vendors.min.css}"/>
+		<link rel="stylesheet" type="text/css" th:href="@{/layout/stylesheets/algaworks.min.css}"/>
+		<link rel="stylesheet" type="text/css" th:href="@{/layout/stylesheets/application.css}"/>
+		<link rel="stylesheet" type="text/css" th:href="@{/layout/stylesheets/brewer.css}"/>
+		<link rel="stylesheet" type="text/css" th:href="@{/layout/stylesheets/uikit/upload.min.css}"/>
+		<link rel="shortcut icon" th:href="@{/layout/images/favicon.png}"/>
+	
+		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+			<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+			<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+		<![endif]-->
+	</head>
+	<body>
+	     <!-- Configuracao para CSRF -->
+		<input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+		<input type="hidden" name="_csrf_header" th:value="${_csrf.headerName}" />
+		
+		<div class="aw-layout-page">
+		  <!-- <nav class="navbar  navbar-fixed-top  navbar-default  js-sticky-reference" id="main-navbar">
+		    <div class="container-fluid">
+			
+			    <div class="navbar-header">
+			      <a class="navbar-brand  hidden-xs" href="#">
+			        <img alt="AlgaWorks" th:src="@{/layout/images/logo.png}"/>
+			      </a>
+			
+			      <ul class="nav  navbar-nav">
+			        <li>
+			          <a href="#" class="js-sidebar-toggle"><i class="fa fa-bars"></i></a>
+			        </li>
+			      </ul>
+			    </div>
+			
+			    <ul class="nav navbar-nav  navbar-right">
+			      <li>
+			        <a href="#"><em class="fa  fa-sign-out"></em></a>
+			      </li> 
+			    </ul>
+			
+			  </div>
+			</nav>  -->
+			<!-- Inserido através do Replace -->
+			<div th:replace="/fragments/Navegacao :: navegacao"></div>
+			
+			<!-- <aside class="aw-layout-sidebar  js-sidebar">
+			  <div class="aw-layout-sidebar__content">
+			    <nav class="aw-menu  js-menu">
+				  <ul class="aw-menu__list">
+					<li class="aw-menu__item">
+					  <a href="dashboard.html"><i class="fa  fa-fw  fa-home"></i><span>Dashboard</span></a>
+					</li>
+					
+					<li class="aw-menu__item  is-active">
+					  <a href="#">
+					    <i class="fa  fa-fw  fa-file-text"></i><span>Cadastros</span>
+					    <i class="aw-menu__navigation-icon  fa"></i>
+					  </a>
+					
+					  <ul class="aw-menu__list  aw-menu__list--sublist">
+					    <li class="aw-menu__item  aw-menu__item--link"><a href="cadastro-produto.html">Cadastro de produto</a></li>
+					    <li class="aw-menu__item  aw-menu__item--link  is-active"><a href="pesquisa-produtos.html">Pesquisa de produtos</a></li>
+					    <li class="aw-menu__item  aw-menu__item--link"><a href="tabela-sem-dados.html">Tabela sem dados</a></li>
+					  </ul>
+					</li>
+					
+					<li class="aw-menu__item  is-expanded">
+					  <a href="#">
+					    <i class="fa  fa-fw  fa-file-text"></i><span>Páginas comuns</span>
+					    <i class="aw-menu__navigation-icon  fa"></i>
+					  </a>
+					
+					  <ul class="aw-menu__list  aw-menu__list--sublist">
+					    <li class="aw-menu__item  aw-menu__item--link"><a href="pagina-vazia.html">Página vazia</a></li>
+					    <li class="aw-menu__item  aw-menu__item--link"><a href="login.html">Login</a></li>
+					    <li class="aw-menu__item  aw-menu__item--link"><a href="esqueceu-a-senha.html">Esqueceu a senha</a></li>
+					    <li class="aw-menu__item  aw-menu__item--link"><a href="403.html">403</a></li>
+					    <li class="aw-menu__item  aw-menu__item--link"><a href="404.html">404</a></li>
+					    <li class="aw-menu__item  aw-menu__item--link"><a href="500.html">500</a></li>
+					  </ul>
+					</li>
+					
+				  </ul>
+			    </nav>
+		      </div>
+			</aside>  -->
+			<!-- Inserido através do Replace -->
+			<div th:replace="/fragments/BarraLateral :: barraLateral"></div>
+			
+			<!-- Inserido através do decorator -->
+			<section class="aw-layout-content  js-content" layout:fragment="cadastroCerveja-conteudo"></section>
+			
+		    <!-- <footer class="aw-layout-footer  js-content">
+				<div class="container-fluid">
+					<span class="aw-footer-disclaimer">&copy; 2022 AlgaWorks. Todos os direitos reservados.</span>
+				</div>
+			</footer> -->
+			<!-- Inserido através do Replace -->
+			<div th:replace="/fragments/Rodape :: rodape"></div>
+		</div>
+		
+		<script th:src="@{/layout/javascripts/vendors.min.js}" type="text/javascript"></script>
+		<script th:src="@{/layout/javascripts/algaworks.min.js}" type="text/javascript"></script>
+		<script th:src="@{/layout/vendors/maskMoney/jquery.maskMoney.min.js}" type="text/javascript"></script>
+		
+		<script th:src="@{/layout/vendors/numeralJs/numeral.min.js}" type="text/javascript"></script>
+		<script th:src="@{/layout/vendors/numeralJs/pt-br.min.js}" type="text/javascript"></script>
+		
+		<script th:src="@{/layout/javascripts/brewer.js}" type="text/javascript"></script>
+		<script th:src="@{/layout/javascripts/estilo-cadastro-rapido.js}" type="text/javascript"></script>
+		<script th:src="@{/layout/vendors/uikit/uikit.min.js}" type="text/javascript"></script>
+		<script th:src="@{/layout/javascripts/uikit/upload.min.js}" type="text/javascript"></script>
+		<script th:src="@{/layout/vendors/maskPhoneNumber/jquery.mask.min.js}" type="text/javascript"></script>
+		<script th:src="@{/layout/javascripts/brewer-dialogo-excluir.js}" type="text/javascript"></script>
+		
+		<th:block layout:fragment="javascript-extra"></th:block>
+	</body>
+</html>

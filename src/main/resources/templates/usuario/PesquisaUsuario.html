@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html  xmlns="http://www.w3.org/1999/xhtml" 
+      		xmlns:th="http://www.thymeleaf.org" 
+      		lang="pt-BR"
+      		xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      		layout:decorate="~{layout/LayoutPadrao}"
+      		xmlns:brewer="http://localhost.brewer" 
+      		xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+      
+	<head>
+		<meta charset="UTF-8">
+		<title>Pesquisa de Usuário</title>
+	</head>
+	<body>
+		<section  layout:fragment="cadastroCerveja-conteudo">
+			<div class="page-header">
+				<div class="container-fluid row">
+					<div class="col-xs-10">
+						<h1>
+							<strong>Pesquisa de Usuário</strong>
+						</h1>
+					</div>
+					<!-- Se o usuário tiver autorização essa div ira aparecer - config por url -->
+					<div class="col-xs-2" >
+						<div class="aw-page-header-controls">
+							<a class="btn btn-default" th:href="@{/usuario/novo}">
+								<i class="glyphicon glyphicon-plus-sign"></i> 
+									<span class="hidden-xs hidden-sm">Novo Usuário</span>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="container-fluid">
+				<form method="get" th:action="@{/usuario}" th:object="${usuarioFilter}" >
+					<div class="row">
+						<div class="form-group  col-sm-6">
+							<label class="control-label" for="nome">Nome</label>     <!-- Fazendo bind do html para o Controller -->
+							<input type="text" class="form-control" id="nome" autofocus="autofocus" th:field="*{nome}" />
+						</div>
+						<div class="form-group  col-sm-6">
+							<label class="control-label" for="email">E-mail</label>     <!-- Fazendo bind do html para o Controller -->
+							<input type="text" class="form-control" id="email" th:field="*{email}" />
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-3 col-sm-6">
+							<div class="form-group" >
+									<label for="grupo" class="control-label">Grupos</label>
+									<div>
+						                	<th:block th:each="grupo : ${grupos}">
+							                	<div class="checkbox checkbox-inline">
+							                		<input type="checkbox" name="adm" th:value="${grupo.codigo}" th:field="*{grupos}"/>
+							                		<label th:text="${grupo.nome}" th:for="${#ids.prev('grupos')}" >Administrador</label>
+							                	</div>
+						                	</th:block>
+									</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="form-group  col-sm-12">
+							<button type="submit" class="btn  btn-primary">Pesquisar</button>
+						</div>
+					</div>
+				</form>
+				
+				<div class="aw-datatable-toolbar">
+					<button class="btn btn-default btn-xs js-status-btn disabled" data:status="ATIVAR" data:url="@{/usuario/status}">
+						<span>Ativar</span>
+					</button>
+					<button class="btn btn-default btn-xs js-status-btn disabled" data:status="DESATIVAR" data:url="@{/usuario/status}">
+						<span>Desativar</span>
+					</button>
+				</div>
+					
+				<table class="table table-hover bw-tabela-simples table-responsive">
+					<thead>
+						<tr>
+							<th class="table-usuario-col-status">
+								<div class="checkbox aw-checkbox-no-margin">
+									<input type="checkbox" class="js-selecao-todos">
+									<label></label>
+								</div>
+							</th>
+							<th class="table-cidade-col-nome">
+								<span>Nome</span>
+							</th>
+							<th class="table-cidade-col-estado">
+								<span>Email</span>
+							</th>
+							<th class="table-cidade-col-estado">
+								<span>Grupo</span>
+							</th>
+							<th class="table-cidade-col-estado">
+								<span>Status</span>
+							</th>
+							<th class="table-cidade-col-acoes"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<!--<tr th:each="usuario : ${usuarios}">   -->
+						<tr th:each="usuario : ${pagina.conteudo}">
+							<td class="table-usuario-col-status">
+								<div class="checkbox aw-checkbox-no-margin" th:if="${#authentication.principal.usuario.codigo != usuario.codigo}">
+									<input type="checkbox" class="js-selecao" data:codigo="${usuario.codigo}">
+									<label></label>
+								</div>
+							</td>
+							<td class="text-rigth" th:text="${usuario.nome}" >${usuario.nome}</td>
+							<td class="text-rigth" th:text="${usuario.email}" >${usuario.email}</td>
+							<td>                                                                                                                  <!-- Objeto de statítica do thymeleaf {nome}Stat.first Stat.last -->
+								<th:block  th:each="grupo : ${usuario.grupos}" th:text="|${grupo.nome}${grupoStat.last ? '' : ', '}|"></th:block >
+							</td> 						
+							<!-- <td class="text-rigth" th:text="${usuario.ativo} ? Ativo : Inativo">${usuario.ativo}</td> -->
+							<td >
+								<th:block th:if="${usuario.ativo}">
+									<span class="label label-success" th:text="${usuario.ativo} ? Ativo : Inativo">${usuario.ativo}></span>
+								</th:block>
+								<th:block th:if="${not usuario.ativo}">
+								 	<span class="label label-danger" th:text="${usuario.ativo} ? Ativo : Inativo">${usuario.ativo}></span>
+								</th:block>
+							</td>
+							<td class="text-center" >
+							   <a class="btn  btn-link  btn-xs" title="Editar"
+							            th:href="@{/usuario/{codigo}(codigo=${usuario.codigo})}">
+							     <i class="glyphicon glyphicon-pencil"></i>
+							   </a>
+							   <a class="btn  btn-link  btn-xs js-exclusao-btn" title="Excluir" href="#"
+							   	       data:url="@{/usuario/{codigo}(codigo=${usuario.codigo})}"
+									   data:objeto="${usuario.nome}" >
+							      <i class="glyphicon glyphicon-remove"></i>
+							   </a>
+							</td>
+                        </tr>
+                        <!-- <tr th:if="${usuarios.empty}">  -->
+						<tr th:if="${pagina.vazio}">
+							<td colspan="7">Nenhum usuário cadastrado!</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<brewer:pagination page="${pagina}" />
+		</section>
+		<th:block layout:fragment="javascript-extra">
+			<script th:src="@{/layout/javascripts/multiselecao.js}"></script>
+		</th:block>
+	</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="http://www.thymeleaf.org" 
+      lang="pt-BR"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/LayoutPadrao}"
+      xmlns:brewer="http://localhost.brewer" >
+      
+	<head>
+		<meta charset="UTF-8">
+		<title>Pesquisa de Estilo</title>
+	</head>
+	
+	<body>
+		<section  layout:fragment="cadastroCerveja-conteudo">
+			<div class="page-header">
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-sm-10">
+							<h1>
+								<strong>Pesquisa de estilo</strong>
+							</h1>
+						</div>
+						<div class="col-sm-2">
+							<div class="aw-page-header-controls">
+								<a class="btn btn-default" th:href="@{/estilo/novo}">
+									<i class="glyphicon glyphicon-plus-sign"></i> 
+									<span class="hidden-xs hidden-sm">Novo estilo</span>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>		
+			
+			<div class="container-fluid">
+				<form method="get" th:object="${estiloFilter}">
+					<div class="row">
+						<div class="form-group  col-sm-12">
+							<label class="control-label" for="estilo">Estilo</label>          <!-- Fazendo bind do html para o Controller -->
+							<input type="text" class="form-control" id="estilo" autofocus="autofocus"  th:field="*{nome}"  />
+						</div>
+						
+					</div>
+					<div class="row">
+						<div class="form-group  col-sm-12">
+							<button type="submit" class="btn  btn-primary">Pesquisar</button>
+						</div>
+					</div>
+				</form>
+				
+				<table class="table table-hover bw-tabela-simples">
+					<thead>
+						<tr>
+							<th class="table-estilo-col-codigo"><span>Código</span></th>
+							<th class="table-estilo-col-nome">
+								<!-- <span>Nome</span> Adicionando componente de paginação -->
+								<brewer:order page="${pagina}" field="nome" text="Nome" />
+							</th>
+							<th class="table-estilo-col-acoes"></th>
+						</tr>
+					</thead>
+					<tbody>
+					    <tr th:each="estilo : ${pagina.conteudo}">
+						    <td class="text-center" th:text="${estilo.codigo}" ></td>
+							<td class="text-rigth" th:text="${estilo.nome}" ></td>
+							<td class="text-center">
+								<a class="btn  btn-link  btn-xs" title="Editar"
+									th:href="@{/estilo/{codigo}(codigo=${estilo.codigo})}"> 
+									<i class="glyphicon glyphicon-pencil"></i>
+								</a>
+								<a class="btn  btn-link  btn-xs js-exclusao-btn" title="Excluir"
+									data:url="@{/estilo/{codigo}(codigo=${estilo.codigo})}"
+									data:objeto="${estilo.nome}">
+								<i class="glyphicon glyphicon-remove"></i>
+							</a>
+							</td>
+                        </tr>
+						<tr th:if="${#lists.isEmpty( pagina.conteudo )}">
+							<td colspan="3">Nenhum estilo cadastrado!</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			
+			<!-- Incluindo a paginação -->
+			<brewer:pagination page="${pagina}" />
+		</section>
+	</body>
+</html>

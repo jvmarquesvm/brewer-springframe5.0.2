@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="http://www.thymeleaf.org" 
+      lang="pt-BR"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/LayoutPadrao}"
+      xmlns:brewer="http://localhost.brewer"
+      xmlns:data="http://www.thymeleaf.org/extras/data">
+      
+	<head>
+		<meta charset="UTF-8">
+		<title>Pesquisa de Cerveja</title>
+	</head>
+	
+	<body>
+		<section  layout:fragment="cadastroCerveja-conteudo">
+			<div class="page-header">
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-xs-10">
+							<h1>
+								<strong>Pesquisa de cerveja</strong>
+							</h1>
+						</div>
+						<div class="col-xs-2">
+							<div class="aw-page-header-controls">
+								<a class="btn btn-default" th:href="@{/cerveja/novo}">
+									<i class="glyphicon glyphicon-plus-sign"></i> 
+									<span class="hidden-xs hidden-sm">Nova cerveja</span>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="container-fluid">
+				<form method="get" th:object="${cervejaFilter}">
+					<div class="row">
+						<div class="form-group  col-sm-6">
+							<label class="control-label" for="sku">SKU</label>                     <!-- Fazendo bind do html para o Controller -->
+							<input type="text" class="form-control" id="sku" autofocus="autofocus" th:field="*{sku}"/>
+						</div>
+						
+						<div class="form-group  col-sm-6">
+							<label class="control-label" for="nome">Nome</label>
+							<input type="text" class="form-control" id="nome" th:field="*{nome}"/>
+						</div>
+					</div>
+					
+					<div class="row">
+						<div class="form-group  col-sm-6">
+							<label class="control-label" for="estilo">Estilo</label>
+							<select id="estilo" class="form-control" th:field="*{estilo}">
+			                    <option value="">Todos os estilos</option>
+			                    <option th:each="estilo : ${estilos}" th:text="${estilo.nome}" th:value="${estilo.codigo}" ></option>
+			                </select>
+						</div>
+						
+						<div class="form-group  col-sm-6">
+							<label class="control-label" for="sabor">Sabor</label> 
+							<select id="sabor" class="form-control" th:field="*{sabor}">
+			                    <option value="">Todos os sabores</option>
+			                    <option th:each="sabor : ${sabores}" th:value="${sabor}" th:text="${sabor.descricao}"></option>
+			                </select>
+						</div>
+					</div>
+					
+					<div class="row">
+						<div class="form-group  col-sm-6">
+							<label class="control-label">Origem</label> 
+							<div>
+			  					<th:block th:each="origem : ${origens}">
+			  						<div class="radio  radio-inline">
+				    					<input th:id="|id_${origem}|" type="radio" th:value="${origem}" name="origem" th:field="*{origem}"/>
+				    					<label th:for="|id_${origem}|" th:text="${origem.descricao}">Nacional</label>
+			    					</div>
+			  					</th:block>
+			  					<div class="radio  radio-inline">
+				    				<input id="todasOrigens" type="radio" th:checked="*{origem} == null" name="origem"/>
+				    				<label for="todasOrigens" >Todas</label> 
+			    				</div>
+							</div>
+						</div>
+		
+						<div class="form-group col-sm-6">
+							<label for="valorDe">Valor unitário</label>
+							<div class="form-inline">
+								<input type="text" class="form-control  aw-form-control-inline-sm  js-decimal" id="valorDe" th:field="*{valorDe}"/>
+								<label for="valorAte" class="aw-form-label-between">até</label>
+								<input type="text" class="form-control  aw-form-control-inline-sm  js-decimal" id="valorAte" th:field="*{valorAte}"/>
+							</div>
+						</div>
+					</div>
+				
+					<button type="submit" class="btn  btn-primary">Pesquisar</button>
+				</form>
+
+				<table class="table table-hover bw-tabela-simples">
+					<thead>
+						<tr>
+							<th class="table-cervejas-col-foto"></th>
+							<th class="table-cervejas-col-sku">
+								<!-- <a th:href="${pagina.urlOrdenada('sku')}" th:remove="${pagina.vazio} ? tag">
+								    <span>SKU</span>
+								    <span class="dropup" th:remove="${pagina.descendente('sku')} ? tag"
+								                         th:if="${pagina.ordenada('sku')}" >
+										<span class="caret"></span>
+									</span>
+								</a> -->
+								<!--  Transformado em framento -->
+								<!-- <th:block th:replace="fragments/Ordenacao :: order(${pagina}, 'sku', 'SKU') "></th:block>  -->
+								<!--  Transformado em componente -->
+								<brewer:order page="${pagina}" field="sku" text="SKU" />
+							</th>
+							<th class="table-cervejas-col-nome">
+								<!-- <a th:href="${pagina.urlOrdenada('nome')}" th:remove="${pagina.vazio} ? tag">
+								    <span>Nome</span>
+								    <span class="dropup" th:remove="${pagina.descendente('nome')} ? tag"
+								                          th:if="${pagina.ordenada('nome')}" >
+									<span class="caret"></span>
+									</span>
+								</a>  -->
+								<!--  Transformado em componente -->
+								<!-- <th:block th:replace="fragments/Ordenacao :: order(${pagina}, 'nome', 'NOME') "></th:block>  -->
+							    <brewer:order page="${pagina}" field="nome" text="Nome" />
+							</th>
+							<th class="table-cervejas-col-estilo">Estilo</th>
+							<th class="table-cervejas-col-origem">Origem</th>
+							<th class="table-cervejas-col-valor">Valor</th>
+							<th class="table-cervejas-col-acoes"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="cerveja : ${pagina.conteudo}">
+							<td class="text-center">
+								<!-- <img th:src="@{/fotos/thumbnail.{foto}(foto=${cerveja.fotoOrMock})}" class="img-responsive" /> -->
+								<img th:src="${cerveja.urlThumbnailFoto}" class="img-responsive" />
+							</td>
+							<td class="text-center" th:text="${cerveja.sku}"></td>
+							<td th:text="${cerveja.nome}"></td>
+							<td th:text="${cerveja.estilo.nome}"></td>
+							<td th:text="${cerveja.origem.descricao}"></td>
+							<td class="text-right" th:text="|R$ ${{cerveja.valor}}|"></td> <!-- Entre chaves duplas para formatar o valor -->
+							<td class="text-center">
+								<a class="btn  btn-link  btn-xs js-tooltip" title="Editar"
+								                th:href="@{/cerveja/{codigo}(codigo=${cerveja.codigo}) }">
+									<i class="glyphicon glyphicon-pencil"></i>
+								</a>
+								<!-- data:codigo="${cerveja.codigo}"  -->
+								<a class="btn  btn-link  btn-xs js-tooltip js-exclusao-btn" title="Excluir" href="#"
+								     data:objeto="${cerveja.nome}"
+								     data:url="@{/cerveja/{codigo}(codigo=${cerveja.codigo})}" >
+									<i class="glyphicon glyphicon-remove"></i>
+								</a>
+							</td>
+						</tr>
+						<!-- <tr th:if="${#lists.isEmpty(pagina.conteudo)}">  -->
+						<tr th:if="${pagina.vazio}">
+							<td colspan="7">Nenhuma cerveja cadastrada!</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+<!-- th:if="${not pagina.vazia}  -->
+<!-- 			<div class="col-sm-12 text-center" th:if="${not #lists.isEmpty(pagina.conteudo)}"> -->
+			
+<!-- 				EStrutura pronta do bootstrap nav -->
+<!-- 				<nav> -->
+<!-- 					<ul class="pagination pagination-sm" > -->
+<!-- 						<li th:class="${pagina.primeiro} ? disabled"> -->
+<!-- 						    <a href="#" th:remove="${pagina.first} ? tag ou body ou all"> <span> &laquo; </span> </a>  -->
+<!-- 							<a th:href="|?page=${pagina.atual - 1}|" th:remove="${pagina.primeiro} ? tag"> <span> &laquo; </span> </a>  -->
+<!-- 							<a th:href="${pagina.urlParaPagina(pagina.atual - 1)}" th:remove="${pagina.primeiro} ? tag">  -->
+<!-- 							  <span> &laquo; </span>  -->
+<!-- 							 </a> -->
+<!-- 						</li> -->
+						
+<!-- 						<th:block th:each="p : ${ #numbers.sequence(1, pagina.total)}"  -->
+<!-- 						                        th:with="numeroPagina=${p - 1}, paginaAtual=${pagina.atual}"> -->
+<!-- 						                        Timeleaf criando variável valida dentro de block -->
+						                        
+<!-- 							<li class="${ paginaAtual == numeroPagina } ? active"> -->
+<!-- 								 <a th:href="|?page=${p - 1}|"> [[ ${p} ]]</a> -->
+<!-- 							<li th:class="${ numeroPagina == paginaAtual } ? active"> -->
+<!-- 								<a th:href="|&page=${numeroPagina}|"> [[ ${p} ]]</a>  -->
+<!-- 								<a th:href="${pagina.urlParaPagina(numeroPagina)}"> [[ ${p} ]]</a> -->
+<!-- 							</li> -->
+							
+<!-- 						</th:block> -->
+						
+<!-- 						<li th:class="${pagina.ultimo} ? disabled"> -->
+<!-- 							<a th:href="|?page=${pagina.atual + 1}|" th:remove="${pagina.ultimo} ? tag"> <span> &raquo; </span> </a>  -->
+<!-- 							<a th:href="${pagina.urlParaPagina(pagina.atual + 1)}" th:remove="${pagina.ultimo} ? tag">  -->
+<!-- 							  <span> &raquo; </span>  -->
+<!-- 							</a> -->
+<!-- 						</li> -->
+<!-- 					</ul> -->
+<!-- 				</nav> -->
+<!-- 			</div> -->
+			
+			<!-- Criar o componente de paginação -->
+			<brewer:pagination page="${pagina}" />
+		</section>
+	</body>
+</html>

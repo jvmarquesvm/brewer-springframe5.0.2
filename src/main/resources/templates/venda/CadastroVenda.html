@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html  xmlns="http://www.w3.org/1999/xhtml" 
+      		xmlns:th="http://www.thymeleaf.org" 
+      		lang="pt-BR"
+      		xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      		layout:decorate="~{layout/LayoutPadrao}"
+      		xmlns:brewer="http://localhost.brewer" 
+      		xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      		xmlns:data="http://www.thymeleaf.org/extras/data">
+      
+	<head>
+		<meta charset="UTF-8">
+		<title>Cadastro de Venda</title>
+		<link rel="stylesheet" type="text/css" th:href="@{/layout/stylesheets/vendors/easy-autocomplete.min.css}"/>
+		<link rel="stylesheet" type="text/css" th:href="@{/layout/stylesheets/vendors/easy-autocomplete.themes.css}"/>
+	</head>
+	<body>
+		<section  layout:fragment="cadastroCerveja-conteudo">
+			<div class="page-header">
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-xs-10">
+							<h1>
+								<strong th:if="${venda.nova}" th:text="#{venda.cadastro.titulo}">Cadastro de venda</strong>
+								<strong th:unless="${venda.nova}" th:text="#{venda.edicao.titulo(${venda.codigo})}">Edição da venda nº [[${venda.codigo}]]</strong> 
+							</h1>
+						</div>
+						<div class="col-xs-2">
+							<div class="aw-page-header-controls">
+								<a class="btn  btn-default" th:href="@{/venda}">
+									<i class="glyphicon  glyphicon-plus-sign"></i> <span class="hidden-xs  hidden-sm">Pesquisa venda</span>
+								</a>
+					</div>
+				</div>
+					</div>
+				</div>
+			</div>
+			
+			<!-- Ligar os campos as telas  *{} com o objeto -->
+			<div class="container-fluid">
+				<form method="post" th:action="@{/venda/novo}" th:object="${venda}" class="js-formulario-principal">
+					<!--<input type="hidden" id="uuid" th:value="${uuid}">  simular escopo de view pra tabela de venda de itens -->
+					<!-- uuid vindo do objeto e não por um atributo de tela -->
+					<input type="hidden" id="uuid" th:field="*{uuid}"> 
+					
+					<!-- Atributo para o jpa entender que é uma edição de venda -->
+					<input type="hidden" th:field="*{codigo}" />
+					
+					<!-- Atributo para disponibilizar o usuario no código backend -->
+					<input type="hidden" th:field="*{usuario}" />
+					
+					<!-- message dentro do form -->
+					<brewer:message/>
+					<div class="row">
+						<div class="col-sm-4">
+							<div class="aw-box    js-valor-total-box-container">
+								<div class="aw-box__icon">
+									<i class="fa  fa-usd  fa-3x"></i>
+								</div>
+								<div class="aw-box__value negativo">R$ <span class="js-valor-total-box" th:text="${{venda.valorTotal}}">0,00</span></div>
+								<div class="aw-box__title">Total</div>
+							</div>
+						</div>
+				
+						<div class="col-sm-4">
+							<div class="aw-box">
+								<div class="aw-box__icon">
+									<i class="fa  fa-tag  fa-3x"></i>
+								</div>
+								<div class="aw-box__value" th:text="${venda.status.descricao}">Orçamento</div>
+								<div class="aw-box__title">Status</div>
+							</div>
+						</div>
+					
+						<div class="col-sm-4">
+							<div class="aw-box">
+								<div class="aw-box__icon">
+									<i class="fa  fa-calendar  fa-3x"></i>
+								</div>
+								<div class="aw-box__value">
+									<span class="js-tooltip" th:if="${venda.diaCriacao == 0}">Hoje</span>
+									<span class="js-tooltip" th:if="${venda.diaCriacao == 1}">Há 1 dia</span>
+									<span class="js-tooltip" th:if="${venda.diaCriacao > 1}">Há [[${venda.diaCriacao}]] dias</span>
+								</div>
+								<div class="aw-box__title">Criação</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+					
+						<div class="form-group  col-sm-4  bw-required" brewer:classforerror="cliente.codigo">
+							<label class="control-label" for="nomeCliente">Cliente</label>
+							<div class="input-group">
+						      <input id="nomeCliente" type="text" readonly="readonly" class="form-control" th:field="*{cliente.nome}"
+						                     placeholder="Clique na lupa para pesquisar o cliente"     />
+						      <input id="codigoCliente" type="hidden" th:field="*{cliente}" />
+						      <span class="input-group-btn">
+						        <button class="btn  btn-default  js-tooltip" type="button" title="Pesquisa avançada" 
+				        		                                                     data-toggle="modal" data-target="#pesquisaRapidaCliente"
+				        		                                                     th:disabled="${venda.salvarProibido}">
+						        	<i class="glyphicon  glyphicon-search"></i>
+						        </button>
+						      </span>
+						    </div>
+						</div>
+					
+						<!-- <div class="form-group  col-sm-4 bw-required">  -->
+						<div class="form-group  col-sm-4 " brewer:classforerror="valorFrete">
+							<label class="control-label" for="valorFrete">Valor do frete</label>
+							<div class="input-group">
+			      				<div class="input-group-addon">R$</div> 
+								<input type="text" maxlength="14" class="form-control  js-decimal"
+								             id="valorFrete" th:field="*{valorFrete}" data:valor="${valorFrete}"
+								               th:disabled="${venda.salvarProibido}"/>
+							</div>
+						</div>
+						
+						<div class="form-group  col-sm-4" brewer:classforerror="valorDesconto" >
+							<label class="control-label" for="valorDesconto">Valor do desconto</label>
+							<div class="input-group">
+			      				<div class="input-group-addon">R$</div> 
+								<input type="text" maxlength="14" class="form-control  js-decimal" 
+								      id="valorDesconto" th:field="*{valorDesconto}" 
+								        data:valor="${valorDesconto}"  th:disabled="${venda.salvarProibido}"/>
+							</div>
+						</div>
+						</div>
+						<div class="row">
+							<div class="form-group  col-lg-12">
+								<ul class="nav nav-tabs  js-abas-venda">
+								  <li role="presentation" class="active"><a href="#cervejas">Cervejas</a></li>
+								  <li role="presentation"><a href="#entrega">Entrega</a></li>
+								</ul>
+							</div>
+						</div>
+						
+						<div class="tab-content">
+							<div class="tab-pane active" id="cervejas">
+								<div class="row">
+									<div class="form-group  col-lg-12">
+										<input type="text" class="form-control   js-sku-nome-cerveja-input" id="cerveja" 
+											placeholder="Pesquise e adicione a cerveja pelo SKU ou nome" autofocus="autofocus"
+											data:url="@{/cerveja}"  th:disabled="${venda.salvarProibido}" />
+									</div>
+								</div>
+								<!-- parte do  Html que será renderizado via ajax -->
+								<div class="bw-tabela-cervejas js-tabela-cerveja-container" data:valor="${valorTotalItens}">
+									<!-- <div class="bw-tabela-item">
+										<div class="bw-tabela-item__coluna  bw-tabela-item__coluna--foto">
+											<img th:src="@{/fotos/thumbnail.cerveja-mock.png}" class="img-responsive"/>
+										</div>
+								
+										<div class="bw-tabela-item__coluna  bw-tabela-item__coluna--detalhes">
+											<span class="bw-tabela-cerveja-nome">Negra Modelo Long Neck 355ml</span>
+											<span class="label  label-default">AA1112</span>
+											<span class="bw-tabela-cerveja-origem">Importada</span>
+										</div>
+								
+										<div class="bw-tabela-item__coluna  bw-tabela-item__coluna--valores">
+											<div class="bw-tabela-cerveja-valor-pequeno">
+												<input type="text" maxlength="3" class="bw-tabela-cerveja-campo-quantidade" value="1"/>
+												<span>x R$8,90</span>
+											</div>
+											<div class="bw-tabela-cerveja-valor-grande">R$8,90</div>
+										</div>
+									</div> -->
+
+									<!-- Será inserido via thymeleaf devido as regras de validação
+									<div class="bw-tabela-cervejas__vazio">
+										<i class="glyphicon  glyphicon-shopping-cart"></i> 
+										<span>Você ainda não adicionou nenhuma cerveja.</span>
+									</div> -->
+									<th:block th:replace="venda/TabelaItensVenda"></th:block>
+								</div>
+							</div>
+							
+							<div class="tab-pane" id="entrega">
+								<div class="row">
+									<div class="form-group  col-sm-3" brewer:classforerror="dataEntrega">
+										<label class="control-label" for="dataEntrega">Data da entrega</label>
+										<!-- pode fazer um th:field em atributos transientes -->
+										<input type="text" class="form-control" id="dataEntrega" th:field="*{dataEntrega}"
+										             th:disabled="${venda.salvarProibido}"/>
+									</div>
+									
+									<div class="form-group  col-sm-3" brewer:classforerror="horarioEntrega">
+										<label class="control-label" for="horarioEntrega">Horário de entrega</label>
+										<input type="text" class="form-control" id="horarioEntrega" 
+										         th:field="*{horarioEntrega}"  th:disabled="${venda.salvarProibido}" />
+									</div>
+								</div>
+								
+								<div class="row">
+									<div class="form-group  col-sm-12">
+										<textarea class="form-control" id="dataEntrega" rows="5" 
+											placeholder="Alguma observação para o entregador desse pedido?" th:field="*{observacao}"
+											   th:disabled="${venda.salvarProibido}"></textarea>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row" style="clear: both" th:if="${venda.salvarPermitido}">
+								<div class="col-lg-12">
+									<div class="btn-group">
+									  <button type="submit" class="btn  btn-primary js-submit-btn" data:acao="salvar">Salvar</button>
+									  <button type="button" class="btn  btn-primary  dropdown-toggle" data-toggle="dropdown">
+									    <span class="caret"></span>
+									  </button>
+									  
+									  <ul class="dropdown-menu">
+									    <li><a href="#" class="js-submit-btn" data:acao="emitir">Salvar e emitir</a></li>
+									    <li><a href="#" class="js-submit-btn" data:acao="enviarEmail">Salvar e enviar por e-mail</a></li>
+									  </ul>
+									</div>
+								
+									<button class="btn  btn-danger js-submit-btn" 
+									                    data:acao="cancelar" th:unless="${venda.nova}">Cancelar</button>
+								</div>
+						</div>
+				</form>
+			</div>
+			
+		    <th:block th:replace="cliente/PesquisaRapidaCliente :: pesquisaRapidaCliente"></th:block>	
+		    <th:block th:replace="handlebars/TemplateAutocompleteCerveja"></th:block>
+		</section>
+		<th:block layout:fragment="javascript-extra">
+			<script th:src="@{/layout/vendors/handlebars/handlebars.min.js}" ></script>
+			<script th:src="@{/layout/javascripts/cliente-pesquisa-rapida.js}"></script>
+			 <script th:src="@{/layout/vendors/easyautocomplete/jquery.easy-autocomplete.min.js}"></script>
+			 <script th:src="@{/layout/javascripts/venda-autocomplete-itens.js}"></script>
+			 <script th:src="@{/layout/javascripts/venda-tabela-itens.js}"></script>
+			 <!-- Adicionando js para inicialização -->
+			 <script th:src="@{/layout/javascripts/venda.js}"></script>
+			 <!-- Transformar os links em botão de submit -->
+			 <script th:src="@{/layout/javascripts/venda-botoes-submit.js}"></script>
+			<script>
+				$(function() {
+					$('.js-abas-venda a').click(function (e) {
+						e.preventDefault();
+						$(this).tab('show');
+					});
+				});
+			</script>
+		</th:block>
+	</body>
+</html>

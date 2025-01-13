@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="http://www.thymeleaf.org" 
+      lang="pt-BR"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/LayoutPadrao}"
+      xmlns:brewer="http://localhost.brewer" 
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+      
+	<head>
+		<meta charset="UTF-8">
+		<title>Pesquisa de Cidade</title>
+	</head>
+	
+	<body>
+		<section  layout:fragment="cadastroCerveja-conteudo">
+			<div class="page-header">
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-sm-10">
+							<h1>
+								<strong>Pesquisa de Cidade</strong>
+							</h1>
+						</div>
+						<!-- Se o usuário tiver autorização essa div ira aparecer - config por url -->
+						<div class="col-sm-2" sec:authorize-url="/cidade/novo">
+							<div class="aw-page-header-controls">
+								<a class="btn btn-default" th:href="@{/cidade/novo}">
+									<i class="glyphicon glyphicon-plus-sign"></i> 
+									<span class="hidden-xs hidden-sm">Nova Cidade</span>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>		
+			
+			<div class="container-fluid">
+				<form method="get" th:object="${cidadeFilter}">
+					<div class="row">
+						<div class="form-group  col-sm-4">
+							<label class="control-label" for="estado">Estado</label>          
+							<select id="estado" class="form-control" th:field="*{estado}" > <!-- *{ } Fazendo bind do html para o Controller -->
+								<option value="">Selecione o Estado</option>
+								<option th:each="estado : ${estados}" th:value="${estado.codigo}" th:text="${estado.nome}">Selecione o estado</option>
+							 </select>
+						</div>
+						<div class="form-group  col-sm-8">
+							<label class="control-label" for="cidade">Nome</label>          <!-- Fazendo bind do html para o Controller -->
+							<input type="text" class="form-control" id="cidade" autofocus="autofocus" th:field="*{nome}"    />
+						</div>
+					</div>
+					<div class="row">
+						<div class="form-group  col-sm-12">
+							<button type="submit" class="btn  btn-primary">Pesquisar</button>
+						</div>
+					</div>
+				</form>
+				
+				<table class="table table-hover bw-tabela-simples">
+					<thead>
+						<tr>
+							<th class="table-cidade-col-nome">
+								<!-- <span>Nome</span>  -->
+								<brewer:order page="${pagina}" field="nome" text="Nome" />
+							</th>
+							<th class="table-cidade-col-estado">
+								<!-- <span>Nome</span> Adicionando componente de paginação -->
+								<brewer:order page="${pagina}" field="estado" text="Estado" />
+							</th>
+							<th class="table-cidade-col-acoes"></th>
+						</tr>
+					</thead>
+					<tbody>
+					    <tr th:each="cidade : ${pagina.conteudo}">
+							<td class="text-rigth" th:text="${cidade.nome}" ></td>
+							<td class="text-rigth" th:text="${cidade.estado.nome}" ></td>
+							<td class="text-center" >
+							   <a class="btn  btn-link  btn-xs js-tooltip" title="Editar" 
+							              th:href="@{/cidade/{codigo}(codigo=${cidade.codigo})}"
+							            sec:authorize="hasAuthority('CADASTRAR_CIDADE')">
+							     <i class="glyphicon glyphicon-pencil"></i>
+							   </a>
+							   <!-- sec:authorize="hasRole('CADASTRAR_CIDADE')" -->
+							   <a class="btn  btn-link  btn-xs js-exclusao-btn" title="Excluir"  href="#"
+							         data:url="@{/cidade/{codigo}(codigo=${cidade.codigo})}"
+							         data:objeto="${cidade.nome}" >
+							      <i class="glyphicon glyphicon-remove"></i>
+							   </a>
+							</td>
+                        </tr>
+						<tr th:if="${#lists.isEmpty( pagina.conteudo )}">
+							<td colspan="3">Nenhuma cidade/estado cadastrado!</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			
+			<!-- Incluindo a paginação -->
+			<brewer:pagination page="${pagina}" />
+		</section>
+	</body>
+</html>

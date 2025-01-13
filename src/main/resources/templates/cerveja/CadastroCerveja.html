@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="http://www.thymeleaf.org" 
+      lang="pt-BR"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/LayoutPadrao}"
+      xmlns:brewer="http://localhost.brewer" >
+  <!--<head> 
+		<meta charset="UTF-8"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1"/>
+	
+		<title>AlgaWorks</title>
+	
+		<link rel="stylesheet" type="text/css" href="/brewer/layout/stylesheets/vendors.min.css"/>
+		<link rel="stylesheet" type="text/css" href="/brewer/layout/stylesheets/algaworks.min.css"/>
+		<link rel="stylesheet" type="text/css" href="/brewer/layout/stylesheets/application.css"/> -->
+	
+		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+			<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+			<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+		<![endif]-->
+	<!--</head> -->
+	<head>
+		<title>Cadastro Cerveja</title>
+	</head>
+	<body>
+		<!-- <div class="aw-layout-page">
+		  <nav class="navbar  navbar-fixed-top  navbar-default  js-sticky-reference" id="main-navbar">
+		    <div class="container-fluid">
+			
+			    <div class="navbar-header">
+			      <a class="navbar-brand  hidden-xs" href="#">
+			        <img alt="AlgaWorks" src="/brewer/layout/images/logo.png"/>
+			      </a>
+			
+			      <ul class="nav  navbar-nav">
+			        <li>
+			          <a href="#" class="js-sidebar-toggle"><i class="fa fa-bars"></i></a>
+			        </li>
+			      </ul>
+			    </div>
+			
+			    <ul class="nav navbar-nav  navbar-right">
+			      <li>
+			        <a href="#"><em class="fa  fa-sign-out"></em></a>
+			      </li> 
+			    </ul>
+			
+			  </div>
+			</nav>
+			<aside class="aw-layout-sidebar  js-sidebar">
+			  <div class="aw-layout-sidebar__content">
+			    <nav class="aw-menu  js-menu">
+				  <ul class="aw-menu__list">
+					<li class="aw-menu__item">
+					  <a href="dashboard.html"><i class="fa  fa-fw  fa-home"></i><span>Dashboard</span></a>
+					</li>
+					
+					<li class="aw-menu__item  is-active">
+					  <a href="#">
+					    <i class="fa  fa-fw  fa-file-text"></i><span>Cadastros</span>
+					    <i class="aw-menu__navigation-icon  fa"></i>
+					  </a>
+					
+					  <ul class="aw-menu__list  aw-menu__list--sublist">
+					    <li class="aw-menu__item  aw-menu__item--link"><a href="cadastro-produto.html">Cadastro de produto</a></li>
+					    <li class="aw-menu__item  aw-menu__item--link  is-active"><a href="pesquisa-produtos.html">Pesquisa de produtos</a></li>
+					    <li class="aw-menu__item  aw-menu__item--link"><a href="tabela-sem-dados.html">Tabela sem dados</a></li>
+					  </ul>
+					</li>
+					
+					<li class="aw-menu__item  is-expanded">
+					  <a href="#">
+					    <i class="fa  fa-fw  fa-file-text"></i><span>Páginas comuns</span>
+					    <i class="aw-menu__navigation-icon  fa"></i>
+					  </a>
+					
+					  <ul class="aw-menu__list  aw-menu__list--sublist">
+					    <li class="aw-menu__item  aw-menu__item--link"><a href="pagina-vazia.html">Página vazia</a></li>
+					    <li class="aw-menu__item  aw-menu__item--link"><a href="login.html">Login</a></li>
+					    <li class="aw-menu__item  aw-menu__item--link"><a href="esqueceu-a-senha.html">Esqueceu a senha</a></li>
+					    <li class="aw-menu__item  aw-menu__item--link"><a href="403.html">403</a></li>
+					    <li class="aw-menu__item  aw-menu__item--link"><a href="404.html">404</a></li>
+					    <li class="aw-menu__item  aw-menu__item--link"><a href="500.html">500</a></li>
+					  </ul>
+					</li>
+					
+				  </ul>
+			    </nav>
+		      </div>
+			</aside> -->
+			<section  layout:fragment="cadastroCerveja-conteudo" >
+				<div class="page-header">
+					<div class="container-fluid">
+						<div class="row">
+							<div class="col-xs-10">
+								<h1>
+									<strong th:if="${cerveja.nova}">Cadastro de cerveja</strong>
+									<strong th:unless="${cerveja.nova}" th:text="|Edição da cerveja ${cerveja.nome}|">Edição de cerveja</strong>
+								</h1>
+							</div>
+							<div class="col-xs-2">
+								<div class="aw-page-header-controls">
+									<a class="btn btn-default" th:href="@{/cerveja}">
+										<i class="glyphicon glyphicon-plus-sign"></i> 
+										<span class="hidden-xs hidden-sm">Pesquisa cerveja</span>
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>	
+				
+				<div class="container-fluid">
+				<!-- Comentário alerta de erro fora do form
+				<div class="alert  alert-danger  alert-dismissible" role="alert">
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<i class="fa  fa-exclamation-circle"></i> Já existe um produto com o nome informado.
+					</div> -->
+
+					<!--  <th:block th:replace="/fragments/MensagemSucessoValidacao :: mensagemsucesso" />  -->
+				   <!-- th:action permite submeter para uma url diferente da origem -->
+					<form method="post" class="form-vertical  js-form-loading"  th:object="${cerveja}" 
+					th:action="${cerveja.nova} ? @{/cerveja/novo} : @{/cerveja/{codigo}(codigo=${cerveja.codigo})} " >
+						<!--  <th:block th:replace="/fragments/MensagemErroValidacao :: mensagemerro" /> -->
+						<brewer:message/>
+						
+						<!-- o codigo que diz ao jpa que deve atualizar a cerveja e nao incluir uma nova -->
+						<input type="hidden" th:field="*{codigo}"/>
+
+						<div  class="row">
+							<div class="col-sm-2  form-group bw-required" brewer:classforerror="sku">
+								<label for="sku" class="control-label">SKU</label>
+								<input id="sku" type="text" class="form-control" autofocus="autofocus" th:field="*{sku}"/>
+							</div>
+							<div class="col-sm-10 form-group bw-required" brewer:classforerror="nome">
+								<label for="nome" class="control-label">Nome</label>
+								<input id="nome" type="text" class="form-control" th:field="*{nome}"/>
+							</div>
+						</div>
+					
+						<div class="form-group bw-required"  brewer:classforerror="descricao">
+							<label for="descricao" class="control-label">Descrição</label>
+							<textarea id="descricao" rows="3" class="form-control" th:field="*{descricao}"></textarea>
+						</div>
+				
+						<div class="row">
+						  <div class="col-sm-3">
+								<div class="form-group bw-required" brewer:classforerror="estilo">
+								  <label for="estilo" class="control-label">Estilo</label>
+								  <div class="bw-field-action">
+									<select id="estilo" class="form-control" th:field="*{estilo}">
+									  <option value="" selected>Selectione o estilo</option>
+									  <option th:each="estilo : ${estilos}" th:value="${estilo.codigo}" th:text="${estilo.nome}"></option>
+									</select>
+								    <div class="bw-field-action_icon">
+									  <a href="#" data-toggle="modal" data-target="#modalCadastroRapidoEstilo">
+										<i class="glyphicon glyphicon-plus-sign"></i>
+									  </a>
+								    </div>
+								  </div>
+								</div>
+						  </div>
+							
+						  <div class="col-sm-3">
+							  <div class="form-group bw-required" brewer:classforerror="sabor">
+							    <label for="sabor" class="control-label">Sabor</label>
+								<select id="sabor" class="form-control" th:field="*{sabor}">
+								  <option value="" selected>Selectione o sabor</option>
+								  <option th:each="sabor : ${sabores}" th:value="${sabor}" th:text="${sabor.descricao}" ></option>
+								</select>
+							  </div>
+						  </div>
+							
+						  <div class="col-sm-3">
+							  <div class="form-group bw-required" brewer:classforerror="teorAlcoolico">
+							    <label for="teorAlcoolico" class="control-label">Teor Alcoólico</label>
+				                <div class="input-group">
+				                	<input id="teorAlcoolico" type="text" class="form-control js-decimal" th:field="*{teorAlcoolico}"/>
+				                	<div class="input-group-addon">%</div>
+							  	</div>
+							  </div>
+						  </div>
+							
+						  <div class="col-lg-3 col-sm-6">
+							  <div class="form-group bw-required" brewer:classforerror="origem">
+							    <label for="origem" class="control-label">Origem</label>
+							    <div>
+							    	<th:block th:each="origem : ${origens}">
+					                	<div class="radio radio-inline">
+					                		<input th:id="|id_${origem}|" type="radio" name="origem"  th:value="${origem}" th:field="*{origem}" />
+					                		<label th:for="|id_${origem}|" th:text="${origem.descricao}"></label>
+					                	</div>
+							    	</th:block>
+							  	</div>
+							  </div>
+							</div>
+						  </div>
+							  
+						  <div class="row">
+							  <div class="col-sm-3">
+							    <div class="form-group bw-required" brewer:classforerror="valor">
+							      <label for="valor" class="control-label">Valor</label>
+				                  <div class="input-group">
+				                	<div class="input-group-addon">R$</div>
+				                	<input id="valor" type="text" class="form-control js-decimal" th:field="*{valor}"/>
+							  	  </div>
+							    </div>
+							  </div>
+							  <div class="col-sm-3">
+							    <div class="form-group bw-required" brewer:classforerror="comissao">
+							      <label for="comissao" class="control-label">Comissao</label>
+				                  <div class="input-group">
+				                	<input id="comissao" type="text" class="form-control js-decimal" th:field="*{comissao}"/>
+				                	<div class="input-group-addon">%</div>
+							  	  </div>
+							    </div>
+							  </div>
+							  <div class="col-sm-3  form-group bw-required" brewer:classforerror="quantidadeEstoque">
+							    <label for="quantidadeEstoque" class="control-label">Estoque</label>
+								<input id="quantidadeEstoque" type="text" class="form-control js-integer" th:field="*{quantidadeEstoque}"/>
+							  </div>
+						  </div>
+						  
+						  <div class="row">
+						  	<div class="form-group col-sm-12">
+						  	    
+						  		<input type="hidden" th:field="*{foto}" />
+						  		<input type="hidden" th:field="*{contentType}" />
+						  		<input type="hidden" th:field="*{novaFoto}" />
+						  		<!-- Atributo para ser utilizado no S3 -->
+						  		<input type="hidden" th:field="*{urlFoto}">
+						  	    
+						  	    <!-- cerveja-upload-foto.js  -->
+						  		<label class="control-label">Foto</label>
+						  		<div class="js-foto-container-cerveja" th:attr="data-url-fotos=@{/fotos}">
+							  		<div class="bw-upload" id="upload-drop">
+							  			<img th:src="@{/layout/images/mini-loading.gif}" class="js-img-loading hidden" />
+							  			<i class="glyphicon glyphicon-cloud-upload" ></i>
+							  			<span>Arraste a foto aqui ou </span>
+							  			<a class="bw-upload-form-file">
+							  			    selecione 
+							  				<input id="upload-select" type="file" accept=".jpg, .jpeg, .png" /> 
+							  			</a>
+							  		</div>
+						  		</div>
+						  		
+						  		<!-- <div class="row  js-foto-cerveja">
+									<div class="col-md-4"></div>
+									<div class="col-md-4  text-center">
+										<a href="#" class="thumbnail">
+											<img th:src="@{/fotos/temp/22-joaovictor.png}"></img>
+										</a>
+										<button type="button" class="btn  btn-link  js-remove-foto"><span class="glyphicon  glyphicon-remove"></span></button>
+									</div>
+									<div class="col-md-4"></div>
+								</div> -->
+						  	</div>
+						  </div>
+					
+						  <div class="form-group">
+						    <button class="btn  btn-primary" type="submit">Salvar</button>
+						  </div>
+					</form>
+				</div>
+				<div th:replace="cerveja/CadastroRapidoEstilo :: modalEstilo"></div>
+				<th:block th:replace="handlebars/FotoCerveja"/>
+		    </section>
+		    <!-- <footer class="aw-layout-footer  js-content">
+				<div class="container-fluid">
+					<span class="aw-footer-disclaimer">&copy; 2022 AlgaWorks. Todos os direitos reservados.</span>
+				</div>
+			</footer>
+		</div>
+		<script src="/brewer/layout/javascripts/vendors.min.js"></script>
+		<script src="/brewer/layout/javascripts/algaworks.min.js"></script>  -->
+		<th:block layout:fragment="javascript-extra">
+			<script th:src="@{/layout/vendors/handlebars/handlebars.min.js}" ></script>
+			<script th:src="@{/layout/javascripts/cerveja-upload-foto.js}" ></script>
+<!-- //			<script> -->
+<!-- // 				$(function() { -->
+<!-- // 					var settings = { -->
+<!-- // 						type: "json", -->
+<!-- // 						filelimit: 1, -->
+<!-- // 						allow: "*.(jpg|jpeg|png)", -->
+<!-- // 						action: "/brewer/fotos", -->
+<!-- // 						complete: function ( resposta ){ -->
+							
+<!-- // 							console.log("resposta", resposta); -->
+<!-- // 							var inputNomeFoto = $("input[name=foto]"); -->
+<!-- // 							inputNomeFoto.val(resposta.nome); -->
+<!-- // 							var inputNomeContentType = $("input[name=contentType]") -->
+<!-- // 							inputNomeContentType.val(resposta.contentType); -->
+							
+<!-- // 							var htmlFotoCervejaTemplate = $("#foto-cerveja").html(); -->
+<!-- // 							var template = Handlebars.compile(htmlFotoCervejaTemplate); -->
+<!-- // 							var htmlFotoCerveja = template({nomeFoto: resposta.nome});  -->
+							
+<!-- // 							var uploadDrop = $("#upload-drop"); -->
+<!-- // 							uploadDrop.addClass("hidden"); -->
+<!-- // 							var containerFotoCerveja = $(".js-foto-container-cerveja"); -->
+<!-- // 							containerFotoCerveja.append(htmlFotoCerveja); -->
+							
+<!-- // 							$(".js-remove-foto").on("click", function(){ -->
+<!-- // 								uploadDrop.removeClass("hidden"); -->
+<!-- // 								inputNomeFoto.val(""); -->
+<!-- // 								inputNomeContentType.val(""); -->
+<!-- // 								$(".js-foto-cerveja").remove(); -->
+<!-- // 							}); -->
+<!-- // 						}  -->
+<!-- // 					}; -->
+					
+<!-- // 					UIkit.uploadSelect($("#upload-select"), settings); -->
+<!-- // 					UIkit.uploadDrop($("#upload-drop"), settings); -->
+<!-- // 				}); -->
+<!-- 			</script> -->
+		</th:block>
+	</body>
+</html>
