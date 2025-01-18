@@ -156,7 +156,7 @@
 			<scope>compile</scope>
 		</dependency>
 		
-		<!-- Mysql 
+		<!-- Mysql  
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
@@ -294,7 +294,7 @@
 		        </configuration>
 	   		</plugin>
 	   		
-	   		<!-- Plugin para fazer o deploy no heroku -->
+	   		<!-- Plugin WebApp Runner para fazer o deploy no heroku -->
 	   		<plugin>
             	<groupId>org.apache.maven.plugins</groupId>
             	<artifactId>maven-dependency-plugin</artifactId>

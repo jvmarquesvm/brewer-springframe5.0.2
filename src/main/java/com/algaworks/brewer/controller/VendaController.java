@@ -255,7 +255,7 @@ public class VendaController {
 	
 	@GetMapping
 	public ModelAndView pesquisar(VendaFilter vendaFilter, 
-			@PageableDefault(size = 3) Pageable pageable, HttpServletRequest httpServletRequest) {
+			@PageableDefault(size = 15) Pageable pageable, HttpServletRequest httpServletRequest) {
 		ModelAndView mv = new ModelAndView("/venda/PesquisaVenda");
 		mv.addObject("todosStatus", StatusVenda.values());
 		System.out.println("passou no pesquisar venda");

@@ -30,16 +30,16 @@ import com.algaworks.brewer.repository.CervejasRepository;
 @ComponentScan(basePackageClasses = {CervejasRepository.class})
 @EnableTransactionManagement
 public class JPAConfig {
-	/*
-	//@Profile("local")
+	
+	@Profile("local")
 	@Bean
 	public DataSource dataSource() {
 		JndiDataSourceLookup dataSource = new JndiDataSourceLookup();
 		dataSource.setResourceRef(true);
 		return dataSource.getDataSource("jdbc/brewerDB");
-	}*/
+	}
 	
-	//@Profile("prod")
+	@Profile("prod")
 	@Bean
 	public DataSource dataSourceProd() throws URISyntaxException {
 		URI jdbUri = new URI(System.getenv("JAWSDB_URL"));

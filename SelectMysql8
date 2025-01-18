@@ -1,0 +1,2 @@
+SELECT * FROM brewer.cerveja;
+SELECT * FROM brewer.usuario;

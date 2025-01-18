@@ -80,7 +80,7 @@ import nz.net.ultraq.thymeleaf.LayoutDialect;
  * 
  */
 
-@Configuration                                                       //utilizandoSession pra simular escopo de view para a tabela de itens de venda
+@Configuration            //utilizandoSession pra simular escopo de view para a tabela de itens de venda
 @ComponentScan(basePackageClasses = {CervejasController.class, TabelasItensSession.class})
 @EnableWebMvc
 @EnableSpringDataWebSupport
