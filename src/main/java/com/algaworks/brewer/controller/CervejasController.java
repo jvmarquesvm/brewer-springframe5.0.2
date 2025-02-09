@@ -56,7 +56,7 @@ public class CervejasController {
 //	@Autowired
 //	private CadastroEstiloService estiloService;
 	
-	@RequestMapping(value =  "/novo", method = RequestMethod.GET)
+	@RequestMapping(value =  "/novo", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	//public String novo(Model model) {
 	//public String novo(Cerveja cerveja) {
 	public ModelAndView novo(Cerveja cerveja) {
@@ -66,6 +66,7 @@ public class CervejasController {
 		//model.addAttribute(new Cerveja());
 		//cervejaRepository.findAll();
 		
+		//Quem encontra esse caminho é o viewResolver
 		ModelAndView mv = new ModelAndView("cerveja/CadastroCerveja");
 		mv.addObject("sabores", Sabor.values() );
 		mv.addObject("estilos", estiloRepository.findAll() );
@@ -114,7 +115,7 @@ public class CervejasController {
 //		return new ModelAndView("redirect:/cerveja/estilo/novo");
 //	}
 	
-	@RequestMapping( value = { "/novo", "{\\d+}" }, method = RequestMethod.POST)
+	@RequestMapping( value = { "/novo", "{\\d+}" }, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	//public String cadastro(@Valid Cerveja cerveja, BindingResult result, Model model, RedirectAttributes atrib ) {
 	public ModelAndView cadastro(@Valid Cerveja cerveja, BindingResult result, Model model, RedirectAttributes atrib ) {
 		
@@ -148,7 +149,8 @@ public class CervejasController {
 	 *  para usar o pageable deve configar no webconfig - @EnableSpringDataWebSupport
 	 *  pageSize default 20
 	 */
-	@GetMapping
+	//@GetMapping
+	@RequestMapping(  method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ModelAndView pesquisar(CervejaFilter cervejaFilter, BindingResult result, 
 			                                    @PageableDefault(size = 2) Pageable pageable,
 			                                       HttpServletRequest request ) {
@@ -173,13 +175,14 @@ public class CervejasController {
 //	}
 	
 	//Necessário passar na chamada o contentType application/json
-	@RequestMapping( consumes = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping( consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody List<CervejaDTO> pesquisar(String skuOuNome){
 		return cervejasRepository.porSkuOuNome(skuOuNome);
 	}
 	
-	@DeleteMapping("/{codigo}")
+	//@DeleteMapping("/{codigo}")
 	//public @ResponseBody ResponseEntity<?> excluir(@PathVariable("codigo") Long codigo) {
+	@RequestMapping( value = "/{codigo}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody ResponseEntity<?> excluir(@PathVariable("codigo") Cerveja cerveja) {
 		try {
 			cervejaService.excluir(cerveja);
@@ -189,7 +192,8 @@ public class CervejasController {
 		return ResponseEntity.ok().build();
 	}
 	
-	@GetMapping("/{codigo}")
+	//@GetMapping("/{codigo}")
+	@RequestMapping( value = "/{codigo}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ModelAndView editar(@PathVariable("codigo") Cerveja cerveja) {
 		ModelAndView mv = novo(cerveja);
 		mv.addObject(cerveja);

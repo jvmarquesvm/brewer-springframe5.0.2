@@ -45,14 +45,14 @@ public class CidadeController {
 	@Autowired
 	private CidadeService cidadeService;
 	
-	@RequestMapping(value =  "/novo", method = RequestMethod.GET)
+	@RequestMapping(value =  "/novo", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ModelAndView novaCidade(Cidade cidade) {
 		ModelAndView mv = new ModelAndView("cidade/CadastroCidade");
 		mv.addObject("estados", estadoRepository.findAll());
 		return mv;
 	}
 	
-	@RequestMapping(value =  "/novo", method = RequestMethod.POST)
+	@RequestMapping(value =  "/novo", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	/*Invalida todas as entradas*/
 	//@CacheEvict( value = "cidades", allEntries = true)
 	/*Invalidando somente pela chave
@@ -75,7 +75,7 @@ public class CidadeController {
 		return new ModelAndView("redirect:/cidade/novo");
 	}
 	
-	@RequestMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	/*Somente dando nome ao cache*/
 	//@Cacheable("cidades")
 	/*Configurando o cache com nome e chave*/
@@ -92,7 +92,7 @@ public class CidadeController {
 		return cidadeRepository.findByEstadoCodigo(codigoEstado);
 	}
 	
-	@RequestMapping(method = RequestMethod.GET)
+	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ModelAndView pesquisar(CidadeFilter cidadeFilter, BindingResult result,  
 			                         @PageableDefault( size = 2 )  Pageable pageable, 
 			                                             HttpServletRequest request ) {
@@ -103,7 +103,8 @@ public class CidadeController {
 		return mv;
 	}
 	
-	@DeleteMapping("/{codigo}")
+	//@DeleteMapping("/{codigo}")
+	@RequestMapping( value = "/{codigo}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> excluir(@PathVariable("codigo") Cidade cidade) {
 		try {
 			this.cidadeService.excluir(cidade);
@@ -113,11 +114,12 @@ public class CidadeController {
 		return ResponseEntity.ok().build();
 	}
 	
-	@GetMapping("/{codigo}")
+	//@GetMapping("/{codigo}")
+	@RequestMapping( value = "/{codigo}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ModelAndView editar(@PathVariable("codigo") Cidade cidade) {
 		ModelAndView mv = this.novaCidade(cidade);
 		mv.addObject(this.cidadeRepository.findByCodigoFetchingEstado(cidade.getCodigo()));
-		return mv;
+		return mv;	
 	}
 
 }

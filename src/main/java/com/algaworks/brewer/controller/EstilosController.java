@@ -43,13 +43,13 @@ public class EstilosController {
 	@Autowired
 	private EstiloRepository estiloRepository;
 	
-	@RequestMapping(value =  "/novo", method = RequestMethod.GET)
+	@RequestMapping( value = "/novo", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ModelAndView novoEstilo(Estilo estilo) {
 		return new ModelAndView("cerveja/CadastroEstilo");
 	}
 	
 	//@RequestMapping(value =  "/novo", method = RequestMethod.POST,  consumes = { MediaType.APPLICATION_JSON_VALUE })
-	@RequestMapping(value = { "/novo", "{\\d+}" }, method = RequestMethod.POST)
+	@RequestMapping(value = { "/novo", "{\\d+}" }, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ModelAndView cadastro(@Valid Estilo estilo, BindingResult result, RedirectAttributes atrib) {
 		
 		System.out.println("cadastrando estilo " + estilo.getNome());
@@ -71,7 +71,8 @@ public class EstilosController {
 	}
 	
 	//@RequestMapping( method = RequestMethod.POST, consumes = { MediaType.APPLICATION_JSON_VALUE })
-	@PostMapping
+	//@PostMapping
+	@RequestMapping( method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody ResponseEntity<?> salvar( @RequestBody @Valid Estilo estilo, 
 			                               BindingResult result, RedirectAttributes atributos) {
 		System.out.println(estilo.getNome());
@@ -89,7 +90,8 @@ public class EstilosController {
 		return ResponseEntity.ok(estilo);
 	}
 	
-	@GetMapping
+	//@GetMapping
+	@RequestMapping( method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ModelAndView pesquisar(EstiloFilter estiloFilter, BindingResult result, 
 			                    @PageableDefault( size = 2 )  Pageable pageable, 
 			                                           HttpServletRequest request ) {
@@ -102,7 +104,8 @@ public class EstilosController {
 		return mv;
 	}
 	
-	@GetMapping("/{codigo}")
+	//@GetMapping("/{codigo}")
+	@RequestMapping( value = "/{codigo}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ModelAndView editar(@PathVariable("codigo") Estilo estilo) {
 		ModelAndView mv = this.novoEstilo(estilo);
 		Estilo estiloRecuperado = estiloRepository.findByCodigo(estilo.getCodigo());
@@ -110,7 +113,8 @@ public class EstilosController {
 		return mv;
 	}
 
-	@DeleteMapping("/{codigo}")
+	//@DeleteMapping("/{codigo}")
+	@RequestMapping( value = "/{codigo}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> excluir(@PathVariable("codigo") Estilo estilo) {
 		try {
 			this.cadastroEstiloService.excluir(estilo);

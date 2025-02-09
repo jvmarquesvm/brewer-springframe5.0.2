@@ -300,12 +300,14 @@ public class VendaController {
 		return new ModelAndView("redirect:/venda/" + venda.getCodigo());
 	}
 	
-	@GetMapping(value = "/totalPorMes")
+	//@GetMapping(value = "/totalPorMes")
+	@RequestMapping(value = "/totalPorMes", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody List<VendaMes> listarTotalVendaPorMes(){
 		return vendaRepository.totalPorMes();
 	}
 	
-	@GetMapping(value = "/porOrigem")
+	//@GetMapping(value = "/porOrigem")
+	@RequestMapping(value = "/porOrigem", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody List<VendaOrigem> vendasPorNacionalidade() {
 		return this.vendaRepository.totalPorOrigem();
 	}

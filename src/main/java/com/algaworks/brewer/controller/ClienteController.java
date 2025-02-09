@@ -46,7 +46,8 @@ public class ClienteController {
 	@Autowired
 	private ClienteRepository clienteRepository;
 	
-	@RequestMapping(value =  "/novo", method = RequestMethod.GET)
+	//Teve que colocar o retorno para json devido a lib jackson-databind
+	@RequestMapping(value = "/novo", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ModelAndView novo(Cliente cliente) {
 		ModelAndView mv = new ModelAndView("cliente/CadastroCliente");
 		
@@ -57,7 +58,8 @@ public class ClienteController {
 		return mv;
 	}
 	
-	@PostMapping(value = "/novo")
+	//Teve que colocar o retorno para json devido a lib jackson-databind
+	@RequestMapping(value = "/novo", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ModelAndView salvar( @Valid Cliente cliente, BindingResult result, RedirectAttributes atributos) {
 		if(result.hasErrors()) {
 			//System.out.println("Erro BeanValidation em Salvar Cliente Estado: " + cliente.getEndereco().getEstado().getNome());
@@ -75,7 +77,9 @@ public class ClienteController {
 		return new ModelAndView("redirect:/cliente/novo");
 	}
 	
-	@GetMapping
+	//@GetMapping
+	//Teve que colocar o retorno para json devido a lib jackson-databind
+	@RequestMapping( method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ModelAndView pesquisar( ClienteFilter clienteFilter, BindingResult result, 
 			                              @PageableDefault(size=2) Pageable pageable,
 			                                HttpServletRequest request ) {
@@ -85,7 +89,7 @@ public class ClienteController {
 		return mv;
 	}
 	
-    @RequestMapping( consumes = { MediaType.APPLICATION_JSON_VALUE })
+    @RequestMapping( consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = MediaType.APPLICATION_JSON_VALUE  )
 	public @ResponseBody List<Cliente> pesquisar(String nome){
     	validarTamanhoNome(nome);
     	return clienteRepository.findByNomeStartingWithIgnoreCase(nome);
@@ -105,7 +109,8 @@ public class ClienteController {
 		return ResponseEntity.badRequest().build();
 	}
 	
-	@GetMapping("/{codigo}")
+	//@GetMapping("/{codigo}")
+	@RequestMapping( value = "/{codigo}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ModelAndView editar(@PathVariable("codigo") Cliente cliente) {
 		System.out.println("Edição de Cliente!!");
 		ModelAndView mv = this.novo(cliente);
@@ -114,7 +119,8 @@ public class ClienteController {
 		return mv;
 	}
 	
-	@DeleteMapping("/{codigo}")
+	//@DeleteMapping("/{codigo}")
+	@RequestMapping( value = "/{codigo}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> excluir(@PathVariable("codigo") Cliente cliente) {
 		try {
 			this.clienteService.excluir(cliente);

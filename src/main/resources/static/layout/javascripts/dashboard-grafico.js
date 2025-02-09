@@ -18,6 +18,8 @@ Brewer.GraficoVendasPorMes = (function(){
 		var meses = [];
 		var valores = [];
 		
+		console.log("vendaMes: ", vendaMes);
+		
 		vendaMes.forEach(function(obj){
 			meses.unshift(obj.mes);
 			valores.unshift(obj.total);
@@ -58,6 +60,8 @@ Brewer.GraficoVendaPorOrigem = (function() {
 		var meses = [];
 		var cervejasNacionais = [];
 		var cervejasInternacionais = [];
+		
+		console.log("vendaOrigem", vendaOrigem);
 		
 		vendaOrigem.forEach(function(obj) {
 			meses.unshift(obj.mes);

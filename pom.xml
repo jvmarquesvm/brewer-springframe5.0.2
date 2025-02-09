@@ -271,6 +271,30 @@
 		    <version>${commons-dbcp2.version}</version>
 		    <scope>compile</scope>
 		</dependency>
+		
+		<!-- JasperReports-->
+		<!-- Essa versão deve ser escolhida de acordo com a versão do Jaspersoft Studio
+		 no caso foi a versão 6.21.3 que exigiu a lib do jackson-databind -->
+		<dependency>
+		    <groupId>net.sf.jasperreports</groupId>
+		    <artifactId>jasperreports</artifactId>
+		    <version>6.21.3</version>
+		    <scope>compile</scope>
+		</dependency>
+		
+		<dependency>
+		    <groupId>net.sf.jasperreports</groupId>
+		    <artifactId>jasperreports-fonts</artifactId>
+		    <version>6.21.3</version>
+		    <scope>compile</scope>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+		<dependency>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-databind</artifactId>
+		    <version>2.17.3</version>
+		</dependency>
 	</dependencies>
 	
 	<build> 
