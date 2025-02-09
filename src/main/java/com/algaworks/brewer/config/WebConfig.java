@@ -1,9 +1,11 @@
 package com.algaworks.brewer.config;
 
 import java.math.BigDecimal;
+import java.net.URISyntaxException;
 import java.time.format.DateTimeFormatter;
 import java.util.concurrent.TimeUnit;
 
+import javax.cache.Caching;
 import javax.sql.DataSource;
 
 import org.springframework.beans.BeansException;
@@ -11,7 +13,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
-import org.springframework.cache.guava.GuavaCacheManager;
+import org.springframework.cache.jcache.JCacheCacheManager;
+//import org.springframework.cache.guava.GuavaCacheManager;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.MessageSource;
@@ -33,12 +36,13 @@ import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.i18n.FixedLocaleResolver;
 import org.springframework.web.servlet.resource.ResourceResolver;
-import org.springframework.web.servlet.view.jasperreports.JasperReportsMultiFormatView;
-import org.springframework.web.servlet.view.jasperreports.JasperReportsPdfView;
-import org.springframework.web.servlet.view.jasperreports.JasperReportsViewResolver;
+//import org.springframework.web.servlet.view.jasperreports.JasperReportsMultiFormatView;
+//import org.springframework.web.servlet.view.jasperreports.JasperReportsPdfView;
+//import org.springframework.web.servlet.view.jasperreports.JasperReportsViewResolver;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.extras.springsecurity4.dialect.SpringSecurityDialect;
 import org.thymeleaf.spring4.SpringTemplateEngine;
@@ -57,7 +61,7 @@ import com.algaworks.brewer.session.TabelasItensSession;
 import com.algaworks.brewer.thymeleaf.processor.BrewerDialect;
 import com.algaworks.brewer.thymeleaf.processor.MessageElementTagProcessor;
 import com.github.mxab.thymeleaf.extras.dataattribute.dialect.DataAttributeDialect;
-import com.google.common.cache.CacheBuilder;
+//import com.google.common.cache.CacheBuilder;
 
 import nz.net.ultraq.thymeleaf.LayoutDialect;
 
@@ -91,8 +95,9 @@ import nz.net.ultraq.thymeleaf.LayoutDialect;
 @EnableSpringDataWebSupport
 @EnableCaching
 @EnableAsync
-public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationContextAware {
-	
+//Removido na versão 5.0.2
+//public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationContextAware {
+public class WebConfig implements ApplicationContextAware, WebMvcConfigurer {
 	private ApplicationContext applicationContext;
 	
 	private ITemplateResolver templateResolver() {
@@ -177,27 +182,39 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
 	
 	/*
 	 * Cache simples baseado em mapas - para uso local
+	 * Na versão 5.0.2 será utilizado a implementação oficial de cache
+	 * ehCache
 	 * */
 //	@Bean
 //	public CacheManager cacheManager() {
 //		return new ConcurrentMapCacheManager();
 //	}
 	
+	@Bean
+	public CacheManager cacheManager() throws Exception {
+		return new JCacheCacheManager(Caching.getCachingProvider().getCacheManager(
+				getClass().getResource("/cache/ehcache.xml").toURI(), 
+				getClass().getClassLoader()
+			));
+	}
+	
 	/*
 	 * Configurando o Cache do Guava
 	 * Contem mais recursos de configuração
+	 * 
+	 * Guava removido por não ter suporte na versão 5.0.2 do Springframework
 	 * */
-	@Bean
-	public CacheManager cacheManager() {
-		CacheBuilder<Object, Object> cacheBuilder = 
-				      CacheBuilder.newBuilder()
-				                  .maximumSize(2)
-				                  .expireAfterAccess(20, TimeUnit.SECONDS);
-		
-		GuavaCacheManager cacheManager = new GuavaCacheManager();
-		cacheManager.setCacheBuilder(cacheBuilder);
-		return cacheManager;
-	}
+//	@Bean
+//	public CacheManager cacheManager() {
+//		CacheBuilder<Object, Object> cacheBuilder = 
+//				      CacheBuilder.newBuilder()
+//				                  .maximumSize(2)
+//				                  .expireAfterAccess(20, TimeUnit.SECONDS);
+//		
+//		GuavaCacheManager cacheManager = new GuavaCacheManager();
+//		cacheManager.setCacheBuilder(cacheBuilder);
+//		return cacheManager;
+//	}
 	
 	
 	//Colocado para traduzir o erro de datas mal formatada
@@ -231,15 +248,16 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
 	}
 	
 	//Criando ViewResolver para a página de relatorio com Jasper
-	@Bean
-	public ViewResolver jasperReportsViewResolver(DataSource dataSource) {
-		JasperReportsViewResolver resolver = new JasperReportsViewResolver();
-		resolver.setPrefix("classpath:/relatorios/");
-		resolver.setSuffix(".jasper");
-		resolver.setViewNames("relatorio_*");
-		resolver.setViewClass(JasperReportsMultiFormatView.class);
-		resolver.setJdbcDataSource(dataSource);
-		resolver.setOrder(0);
-		return resolver;
-	}
+	//Na versão 5.0.2 do Springframework não tem suporte ao jasperReportView
+//	@Bean
+//	public ViewResolver jasperReportsViewResolver(DataSource dataSource) {
+//		JasperReportsViewResolver resolver = new JasperReportsViewResolver();
+//		resolver.setPrefix("classpath:/relatorios/");
+//		resolver.setSuffix(".jasper");
+//		resolver.setViewNames("relatorio_*");
+//		resolver.setViewClass(JasperReportsMultiFormatView.class);
+//		resolver.setJdbcDataSource(dataSource);
+//		resolver.setOrder(0);
+//		return resolver;
+//	}
 }

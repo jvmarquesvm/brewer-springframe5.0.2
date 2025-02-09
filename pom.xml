@@ -14,13 +14,13 @@
 		<failOnMissingWebXml>false</failOnMissingWebXml>
 		<java.version>8</java.version>
 		<maven-compiler-plugin.version>3.2</maven-compiler-plugin.version>
-		<spring-framework.version>4.3.0.RELEASE</spring-framework.version>
+		<spring-framework.version>5.0.2.RELEASE</spring-framework.version>
 		<servlet.version>3.1.0</servlet.version>
 		<thymeleaf.version>3.0.15.RELEASE</thymeleaf.version>
 		<hibernate-validator.version>5.2.4.Final</hibernate-validator.version>
 		<nz.net.ultraq.thymeleaflayout-version>2.0.1</nz.net.ultraq.thymeleaflayout-version>
 		<!-- Logging -->
-		<log4j.version>2.6</log4j.version>
+		<log4j.version>2.10.0</log4j.version>
 		<jcl-over-slf4j.version>1.7.21</jcl-over-slf4j.version>
 		<hibernate.version>5.1.0.Final</hibernate.version>
 		<flyway-maven-plugin.version>4.0.2</flyway-maven-plugin.version>
@@ -30,13 +30,13 @@
 		<!-- Spring Data JPA -->
 		<spring-data-jpa.version>1.10.2.RELEASE</spring-data-jpa.version>
 		<!-- Jackson - JSON -->
-		<jackson-core.version>2.7.5</jackson-core.version>
+		<jackson-core.version>2.9.2</jackson-core.version>
 		<!-- Thumbnailator - Gerar Thumbnail -->
 		<thumbnailator.version>0.4.8</thumbnailator.version>
 		<!-- Thymeleaf Extras -->
 		<thymeleaf-extras-data.version>2.0.1</thymeleaf-extras-data.version>
-		<!-- Cache Guava -->
-		<guava.version>19.0</guava.version> 
+		<!-- Cache Guava
+		<guava.version>19.0</guava.version>   -->
 		<!-- Beans Utils - Annotations -->
 		<commons-beanutils.version>1.9.2</commons-beanutils.version>
 		<!-- Spring Security -->
@@ -51,6 +51,10 @@
 		<aws-java-sdk3.version>1.10.77</aws-java-sdk3.version>
 		<!-- Apache Commons DBCP / Mysql no Heroku -->
 		<commons-dbcp2.version>2.1.1</commons-dbcp2.version>
+		<!-- ehCache implementação -->
+		<ehcache.version>3.4.0</ehcache.version>
+		<!-- JCache especificação -->
+		<jcache.version>1.0.0</jcache.version>
 	</properties>
 	
 	<!-- Gerenciador de versões de dependências do Springframework -->
@@ -196,13 +200,13 @@
 		    <scope>compile</scope>
 		</dependency>
 		
-		<!-- Cache Guava -->
+		<!-- Cache Guava 
 		<dependency>
 		    <groupId>com.google.guava</groupId>
 		    <artifactId>guava</artifactId>
 		    <version>${guava.version}</version>
 		    <scope>compile</scope>
-		</dependency>
+		</dependency> -->
 		
 		<!-- Spring Context Support (necessário para usar o guava)-->
 		<dependency>
@@ -294,6 +298,20 @@
 		    <groupId>com.fasterxml.jackson.core</groupId>
 		    <artifactId>jackson-databind</artifactId>
 		    <version>2.17.3</version>
+		</dependency>
+	
+		<!-- https://mvnrepository.com/artifact/org.ehcache/ehcache -->
+		<dependency>
+		    <groupId>org.ehcache</groupId>
+		    <artifactId>ehcache</artifactId>
+		    <version>${ehcache.version}</version>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/javax.cache/cache-api -->
+		<dependency>
+		    <groupId>javax.cache</groupId>
+		    <artifactId>cache-api</artifactId>
+		    <version>${jcache.version}</version>
 		</dependency>
 	</dependencies>
 	
